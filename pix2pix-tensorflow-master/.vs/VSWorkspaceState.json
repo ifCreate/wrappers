@@ -1,0 +1,11 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\server\\static",
+    "\\server\\tools",
+    "\\server\\tools\\dump_checkpoints",
+    "\\tools"
+  ],
+  "SelectedNode": "\\pix2pix.py",
+  "PreviewInSolutionExplorer": false
+}
