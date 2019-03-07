@@ -1,12 +1,14 @@
 body {
     margin: 0;
     background-color: #1B1C2A;
-    display: flex;
+    position: relative;
 }
 #facades {
-    transform: scale(1.5);
+    transform: scale(1.5) translate(-50%,-50%);
     transform-origin: 0 0;
-    margin: auto;
+    position: absolute;
+    left: 50%;
+    top: 50%;
 }
 #facades canvas {
     margin: 0 !important;
