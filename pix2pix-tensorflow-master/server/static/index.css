@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+    background-color: #1B1C2A;
+    display: flex;
+}
+#facades {
+    transform: scale(1.5);
+    transform-origin: 0 0;
+    margin: auto;
+}
+#facades canvas {
+    margin: 0 !important;
+}
