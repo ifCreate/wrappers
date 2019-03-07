@@ -25,21 +25,21 @@ function main() {
     var mycanvas = editor.view.ctx.canvas;
     console.log(mycanvas)
     function getMargin(ele){
+      var bound = mycanvas.getBoundingClientRect()
       return {
-        l:ele.offsetLeft,
-        t:ele.offsetTop
+        l:bound.left,
+        t:bound.top
       }
     }
     mycanvas.addEventListener("mousemove", function(e) {
       var elemargin = getMargin(this.parentElement);
-      console.log(elemargin)
-      mouse_pos = {x: (e.clientX-elemargin.l)/my_scale, y: (e.clientY-elemargin.t)/my_scale}
+      mouse_pos = {x: e.offsetX + elemargin.l, y: e.offsetY + elemargin.t}
       update()
     })
 
     mycanvas.addEventListener("mousedown", function(e) {
       var elemargin = getMargin(this.parentElement);
-      drag_start = {x: (e.clientX-elemargin.l)/my_scale, y: (e.clientY-elemargin.t)/my_scale}
+      drag_start = {x: e.offsetX + elemargin.l, y: e.offsetY + elemargin.t}
       mouse_down = true
       mouse_pressed = true
       update()
