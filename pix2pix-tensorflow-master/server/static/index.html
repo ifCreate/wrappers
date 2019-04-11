@@ -1,10 +1,21 @@
 <html>
-<link rel="stylesheet" href="index.css">
+  <head>
+    <link rel="stylesheet" href="index.css">
+    <meta name="viewport" content="width=device-width,user-scalable=no">
+  </head>
 <body>
 <div id="facades"></div>
 
 <script src="deeplearn-0.3.15.js"></script>
 <script>
+
+// disable right click
+window.oncontextmenu = function(event) {
+  event.preventDefault();
+  event.stopPropagation();
+  return false;
+};
+
 
 var editor_background = new Image()
 editor_background.src = "editor.png"
@@ -24,32 +35,90 @@ function main() {
     
     var mycanvas = editor.view.ctx.canvas;
     console.log(mycanvas)
-    function getMargin(ele){
+    function getCanvasBoundingRect(){
       var bound = mycanvas.getBoundingClientRect()
       return {
         l:bound.left,
         t:bound.top
       }
     }
-    mycanvas.addEventListener("mousemove", function(e) {
-      var elemargin = getMargin(this.parentElement);
-      mouse_pos = {x: e.offsetX + elemargin.l, y: e.offsetY + elemargin.t}
+    // interaction handlers
+    function handleMove(pos) {
+      mouse_pos = pos
       update()
-    })
-
-    mycanvas.addEventListener("mousedown", function(e) {
-      var elemargin = getMargin(this.parentElement);
-      drag_start = {x: e.offsetX + elemargin.l, y: e.offsetY + elemargin.t}
+    }
+    function handleDown(pos) {
+      drag_start = pos
       mouse_down = true
       mouse_pressed = true
       update()
-    })
-
-    mycanvas.addEventListener("mouseup", function(e) {
+    }
+    function handleUp() {
       mouse_down = false
       mouse_released = true
       update()
+    }
+    mycanvas.addEventListener("mousemove", function(e) {
+      var elemargin = getCanvasBoundingRect()
+      var x = e.pageX
+      var y = e.pageY
+      var pos = {
+        // HACK see handler for touchmove
+        x: (x + elemargin.l/SCALE)/1.5,
+        y: (y + elemargin.t/SCALE)/1.5,
+      }
+      handleMove(pos)
     })
+    mycanvas.addEventListener("mousedown", function(e) {
+      var elemargin = getCanvasBoundingRect()
+      var x = e.pageX
+      var y = e.pageY
+      var pos = {
+        // HACK see handler for touchmove
+        x: (x + elemargin.l/SCALE)/1.5,
+        y: (y + elemargin.t/SCALE)/1.5,
+      }
+      handleDown(pos)
+    })
+    mycanvas.addEventListener("mouseup", handleUp)
+
+    mycanvas.addEventListener("touchmove", function(e) {
+      e.stopPropagation()
+      e.preventDefault()
+
+      var elemargin = getCanvasBoundingRect()
+      
+      var x = e.targetTouches[0].pageX
+      var y = e.targetTouches[0].pageY
+      var pos = {
+        // HACK somehow the SCALE variable is affecting calculation. Not sure why it works, but... it do 
+        x: (x + elemargin.l/SCALE)/1.5,
+        y: (y + elemargin.t/SCALE)/1.5,
+      }
+      handleMove(pos)
+    })
+    mycanvas.addEventListener("touchstart", function(e) {
+      e.stopPropagation()
+      e.preventDefault()
+
+      var elemargin = getCanvasBoundingRect()
+
+      var x = e.targetTouches[0].pageX
+      var y = e.targetTouches[0].pageY
+      var pos = {
+        // HACK see handler for touchmove
+        x: (x + elemargin.l/SCALE)/1.5,
+        y: (y + elemargin.t/SCALE)/1.5,
+      }
+      handleDown(pos)
+      handleMove(pos)
+    })
+    mycanvas.addEventListener("touchend", function(e) {
+      e.stopPropagation()
+      e.preventDefault()
+      handleUp()
+    })
+
     editors.push(editor)
   }
 
